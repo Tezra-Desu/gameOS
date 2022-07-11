@@ -183,7 +183,7 @@ id: root
             width: vpx(350)
             anchors { left: parent.left; leftMargin: globalMargin }
             source: "../assets/images/gameOS-logo.png"
-            sourceSize: Qt.size(parent.width, parent.height)
+            sourceSize { width: 350; height: 250}
             fillMode: Image.PreserveAspectFit
             smooth: true
             asynchronous: true
@@ -217,7 +217,7 @@ id: root
             width: vpx(150)
             anchors { left: parent.left; leftMargin: globalMargin }
             source: "../assets/images/gameOS-logo.png"
-            sourceSize: Qt.size(parent.width, parent.height)
+            sourceSize { width: 150; height: 100}
             fillMode: Image.PreserveAspectFit
             smooth: true
             asynchronous: true
@@ -309,14 +309,14 @@ id: root
             Component {
             id: featuredDelegate
 
-                AnimatedImage {
+                Image {
                 id: background
 
                     property bool selected: ListView.isCurrentItem && featuredlist.focus
                     width: featuredlist.width
                     height: featuredlist.height
                     source: Utils.fanArt(modelData);
-                    //sourceSize { width: featuredlist.width; height: featuredlist.height }
+                    sourceSize { width: featuredlist.width; height: featuredlist.height }
                     fillMode: Image.PreserveAspectCrop
                     asynchronous: true
                         
@@ -329,11 +329,11 @@ id: root
                         
                         anchors.fill: parent
                         color: "black"
-                        opacity: featuredlist.focus ? 0 : 0.5
+                        opacity: featuredlist.focus ? 0.5 : 0.8
                         Behavior on opacity { PropertyAnimation { duration: 150; easing.type: Easing.OutQuart; easing.amplitude: 2.0; easing.period: 1.5 } }
                     }
 
-                    AnimatedImage {
+                    Image {
                     id: specialLogo
 
                         width: parent.height - vpx(20)
@@ -341,7 +341,7 @@ id: root
                         source: Utils.logo(modelData)
                         fillMode: Image.PreserveAspectFit
                         asynchronous: true
-                        //sourceSize: Qt.size(specialLogo.width, specialLogo.height)
+                        sourceSize { width: 256; height: 256 }
                         anchors.horizontalCenter: parent.horizontalCenter
                         anchors.verticalCenter: parent.verticalCenter
                         opacity: featuredlist.focus ? 1 : 0.5
@@ -420,7 +420,7 @@ id: root
             orientation: ListView.Horizontal
             preferredHighlightBegin: vpx(0)
             preferredHighlightEnd: parent.width - vpx(60)
-            highlightRangeMode: ListView.ApplyRange
+            highlightRangeMode: ListView.StrictlyEnforceRange
             snapMode: ListView.SnapOneItem
             highlightMoveDuration: 100
             keyNavigationWraps: true
@@ -437,12 +437,16 @@ id: root
 
             Component.onCompleted: positionViewAtIndex(savedIndex, ListView.End)
 
-            model: api.collections//Utils.reorderCollection(api.collections);
+            model: Utils.reorderCollection(api.collections);
             delegate: Rectangle {
                 property bool selected: ListView.isCurrentItem && platformlist.focus
                 width: (root.width - globalMargin * 2) / 7.0
                 height: width * settings.WideRatio
-                color: selected ? theme.accent : theme.secondary
+                // added gradient
+                gradient: Gradient {
+                    GradientStop { position: 0.0; color: selected ? theme.gradientaccentstart : theme.gradientend }
+                    GradientStop { position: 0.9; color: selected ? theme.gradientaccentend : theme.gradientstart }
+                }
                 scale: selected ? 1.1 : 1
                 Behavior on scale { NumberAnimation { duration: 100 } }
                 border.width: vpx(1)
@@ -450,39 +454,24 @@ id: root
 
                 anchors.verticalCenter: parent.verticalCenter
 
-				property var platformFilename: Utils.processPlatformName(modelData.shortName)
-
-                Image {
-                id: collectionlogosvg
-
-                    anchors.fill: parent
-                    anchors.centerIn: parent
-                    anchors.margins: vpx(15)
-                    source: "../assets/images/logossvg/" + platformFilename + ".svg"
-                    sourceSize: Qt.size(collectionlogosvg.width, collectionlogosvg.height)
-                    fillMode: Image.PreserveAspectFit
-                    asynchronous: true
-                    smooth: true
-                    opacity: selected ? 1 : 0.2
-                    scale: selected ? 1.1 : 1
-                    Behavior on scale { NumberAnimation { duration: 100 } }
-                }
-
                 Image {
                 id: collectionlogo
 
                     anchors.fill: parent
                     anchors.centerIn: parent
-                    anchors.margins: vpx(15)
-                    source: "../assets/images/logospng/" + platformFilename + ".png"
-                    sourceSize: Qt.size(collectionlogo.width, collectionlogo.height)
+                    /*anchors.margins: vpx(15)*/
+                    anchors.topMargin: vpx(35)
+                    anchors.bottomMargin: vpx(35)
+                    anchors.leftMargin: vpx(22)
+                    anchors.rightMargin: vpx(22)
+                    source: "../assets/images/logospng/" + Utils.processPlatformName(modelData.shortName) + ".png"
+                    sourceSize { width: 128; height: 64 }
                     fillMode: Image.PreserveAspectFit
                     asynchronous: true
                     smooth: true
                     opacity: selected ? 1 : 0.2
                     scale: selected ? 1.1 : 1
                     Behavior on scale { NumberAnimation { duration: 100 } }
-                    visible: collectionlogosvg.status == Image.Error
                 }
 
                 Text {
@@ -490,19 +479,14 @@ id: root
 
                     text: modelData.name
                     anchors { fill: parent; margins: vpx(10) }
-                    color: theme.text
+                    color: "white"
                     opacity: selected ? 1 : 0.2
                     Behavior on opacity { NumberAnimation { duration: 100 } }
                     font.pixelSize: vpx(18)
                     font.family: subtitleFont.name
                     font.bold: true
                     style: Text.Outline; styleColor: theme.main
-
-					// show text when there's no PNG or SVG
-					visible: {
-						if (collectionlogo.status == Image.Error && collectionlogosvg.status == Image.Error) return true;
-						else return false;
-					}
+                    visible: collectionlogo.status == Image.Error
                     anchors.centerIn: parent
                     elide: Text.ElideRight
                     wrapMode: Text.WordWrap
@@ -684,7 +668,7 @@ id: root
             onActivate: { if (!selected) { mainList.currentIndex = currentList.ObjectModel.index; } }
             onListHighlighted: { sfxNav.play(); mainList.currentIndex = currentList.ObjectModel.index; }
         }
-        
+
     }
 
     ListView {
