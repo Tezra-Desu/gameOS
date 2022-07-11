@@ -92,9 +92,9 @@ id: root
 
             anchors.fill: parent
             anchors.margins: vpx(2)
-            source: modelData ? modelData.assets.screenshots[0] || modelData.assets.background || "" : ""
+            source: modelData ? modelData.assets.boxFront || modelData.assets.background || "" : ""
             fillMode: Image.PreserveAspectCrop
-            sourceSize: Qt.size(screenshot.width, screenshot.height)
+            sourceSize { width: 256; height: 256 }
             smooth: false
             asynchronous: true
             Behavior on opacity { NumberAnimation { duration: 200 } }
@@ -108,7 +108,7 @@ id: root
             anchors.margins: root.width/10
             property var logoImage: (gameData && gameData.collections.get(0).shortName === "retropie") ? gameData.assets.boxFront : (gameData.collections.get(0).shortName === "steam") ? logo(gameData) : gameData.assets.logo
             source: modelData ? logoImage || "" : ""
-            sourceSize: Qt.size(favelogo.width, favelogo.height)
+            sourceSize { width: 200; height: 150 }
             fillMode: Image.PreserveAspectFit
             asynchronous: true
             smooth: true
@@ -177,27 +177,6 @@ id: root
         visible: settings.AlwaysShowTitles === "Yes" && !selected
     }
 
-    Text {
-    id: platformname
-
-        text: modelData.title
-        anchors { fill: parent; margins: vpx(10) }
-        color: "white"
-        scale: selected ? 1.1 : 1
-        Behavior on opacity { NumberAnimation { duration: 100 } }
-        font.pixelSize: vpx(18)
-        font.family: subtitleFont.name
-        font.bold: true
-        style: Text.Outline; styleColor: theme.main
-        visible: favelogo.status === Image.Null || favelogo.status === Image.Error
-        anchors.centerIn: parent
-        elide: Text.ElideRight
-        wrapMode: Text.WordWrap
-        lineHeight: 0.8
-        horizontalAlignment: Text.AlignHCenter
-        verticalAlignment: Text.AlignVCenter
-    }
-
     Rectangle {
     id: favicon
 
@@ -233,8 +212,7 @@ id: root
             source: "../assets/images/loading.png"
             width: vpx(50)
             height: vpx(50)
-            asynchronous: true
-            sourceSize: Qt.size(width, height)
+            sourceSize { width: vpx(50); height: vpx(50) }
             RotationAnimator on rotation {
                 loops: Animator.Infinite;
                 from: 0;

@@ -28,7 +28,6 @@ id: root
                 source: "../assets/images/controller/" + processButtonArt(button) + ".png"
                 width: vpx(30)
                 height: vpx(30)
-                asynchronous: true
             }
             Text { 
                 text: name

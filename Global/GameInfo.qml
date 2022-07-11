@@ -17,6 +17,7 @@
 import QtQuick 2.0
 import QtQuick.Layouts 1.11
 import "qrc:/qmlutils" as PegasusUtils
+import "../utils.js" as Utils
 
 Item {
 id: infocontainer
@@ -55,30 +56,29 @@ id: infocontainer
             right: parent.right
         }
 
-        // Rating box
+        // Release Date box
         Text {
-        id: ratingtitle
+        id: releasetitle
 
             width: contentWidth
             height: parent.height
             anchors { left: parent.left; }
             verticalAlignment: Text.AlignVCenter
-            text: "Rating: "
+            text: "Released: "
             font.pixelSize: vpx(16)
             font.family: subtitleFont.name
             font.bold: true
-            color: theme.accent
+            color: theme.accent  
         }
 
         Text {
-        id: ratingtext
-            
-            property real processedRating: gameData ? Math.round(gameData.rating * 100) / 100 : ""
+        id: releasetext
+
             width: contentWidth
             height: parent.height
-            anchors { left: ratingtitle.right; leftMargin: vpx(5) }
+            anchors { left: releasetitle.right; leftMargin: vpx(5) }
             verticalAlignment: Text.AlignVCenter
-            text: steam ? processedRating*5 : processedRating
+            text: currentGame.releaseYear
             font.pixelSize: vpx(16)
             font.family: subtitleFont.name
             color: theme.text
@@ -88,22 +88,22 @@ id: infocontainer
         id: divider1
             width: vpx(2)
             anchors {
-                left: ratingtext.right; leftMargin: (25)
+                left: releasetext.right; leftMargin: (20)
                 top: parent.top; topMargin: vpx(10)
                 bottom: parent.bottom; bottomMargin: vpx(10)
             }
             opacity: 0.2
         }
 
-        // Players box
+        // Developer Box
         Text {
-        id: playerstitle
+        id: devtitle
 
             width: contentWidth
             height: parent.height
-            anchors { left: divider1.right; leftMargin: vpx(25) }
+            anchors { left: divider1.right; leftMargin: vpx(20) }
             verticalAlignment: Text.AlignVCenter
-            text: "Players: "
+            text: "Developer: "
             font.pixelSize: vpx(16)
             font.family: subtitleFont.name
             font.bold: true
@@ -111,13 +111,13 @@ id: infocontainer
         }
 
         Text {
-        id: playerstext
+        id: devtext
 
             width: contentWidth
             height: parent.height
-            anchors { left: playerstitle.right; leftMargin: vpx(5) }
+            anchors { left: devtitle.right; leftMargin: vpx(5) }
             verticalAlignment: Text.AlignVCenter
-            text: gameData ? gameData.players : ""
+            text: gameData ? gameData.developer : ""
             font.pixelSize: vpx(16)
             font.family: subtitleFont.name
             color: theme.text
@@ -127,22 +127,22 @@ id: infocontainer
         id: divider2
             width: vpx(2)
             anchors {
-                left: playerstext.right; leftMargin: (25)
+                left: devtext.right; leftMargin: (20)
                 top: parent.top; topMargin: vpx(10)
                 bottom: parent.bottom; bottomMargin: vpx(10)
             }
             opacity: 0.2
         }
 
-        // Genre box
+        // Publisher Box
         Text {
-        id: genretitle
+        id: pubtitle
 
             width: contentWidth
             height: parent.height
-            anchors { left: divider2.right; leftMargin: vpx(25) }
+            anchors { left: divider2.right; leftMargin: vpx(20) }
             verticalAlignment: Text.AlignVCenter
-            text: "Genre: "
+            text: "Publisher: "
             font.pixelSize: vpx(16)
             font.family: subtitleFont.name
             font.bold: true
@@ -150,23 +150,107 @@ id: infocontainer
         }
 
         Text {
-        id: genretext
+        id: pubtext
+
+            width: contentWidth
+            height: parent.height
+            anchors { left: pubtitle.right; leftMargin: vpx(5) }
+            verticalAlignment: Text.AlignVCenter
+            text: gameData ? gameData.publisher : ""
+            font.pixelSize: vpx(16)
+            font.family: subtitleFont.name
+            color: theme.text
+        }
+
+        Rectangle {
+        id: divider3
+            width: vpx(2)
+            anchors {
+                left: pubtext.right; leftMargin: (20)
+                top: parent.top; topMargin: vpx(10)
+                bottom: parent.bottom; bottomMargin: vpx(10)
+            }
+            opacity: 0.2
+        }
+
+        // Playtime box
+        Text {
+        id: playtimetitle
+
+            width: contentWidth
+            height: parent.height
+            anchors { left: divider3.right; leftMargin: vpx(20) }
+            verticalAlignment: Text.AlignVCenter
+            text: "Playtime: "
+            font.pixelSize: vpx(16)
+            font.family: subtitleFont.name
+            font.bold: true
+            color: theme.accent
+        }
+
+        Text {
+        id: playtimetext
 
             anchors { 
-                left: genretitle.right; leftMargin: vpx(5)
+                left: playtimetitle.right; leftMargin: vpx(5)
                 right: parent.right
                 top: parent.top
                 bottom: parent.bottom
             }
+            verticalAlignment: Text.AlignVCenter
+            text: Utils.formatPlayTime(gameData.playTime)
+            font.pixelSize: vpx(16)
+            font.family: subtitleFont.name
+            elide: Text.ElideRight
+            color: theme.text
+            wrapMode: Text.WordWrap
+            visible: (gameData.playTime > 0)
+        }
+    }
+    // Meta data
+    Item {
+    id: metarow2
+
+        height: vpx(100)
+        anchors {
+            top: gametitle.bottom; topMargin: vpx(25)
+            left: parent.left
+            right: parent.right
+        }
+        // Tags box
+        Text {
+        id: tagtitle
+
+            width: contentWidth
+            height: parent.height
+            anchors { left: parent.left; }
+            verticalAlignment: Text.AlignVCenter
+            text: "Tags: "
+            font.pixelSize: vpx(16)
+            font.family: subtitleFont.name
+            font.bold: true
+            color: theme.accent
+        }
+
+        Text {
+        id: tagtext
+
+        anchors {
+            left: tagtitle.right; leftMargin: vpx(5)
+            top: metarow.bottom
+            bottom: parent.bottom;
+        }    
+            height: parent.height
+            width: parent.width
             verticalAlignment: Text.AlignVCenter
             text: gameData ? gameData.genre : ""
             font.pixelSize: vpx(16)
             font.family: subtitleFont.name
             elide: Text.ElideRight
             color: theme.text
+            wrapMode: Text.WordWrap
         }
-    }
-
+     }
     // Description
     PegasusUtils.AutoScroll
     {
@@ -175,7 +259,7 @@ id: infocontainer
         anchors {
             left: parent.left; 
             right: parent.right;
-            top: metarow.bottom
+            top: metarow2.bottom
             bottom: parent.bottom;
         }
 
@@ -184,7 +268,7 @@ id: infocontainer
             text: gameData && (gameData.summary || gameData.description) ? gameData.description || gameData.summary : "No description available"
             font.pixelSize: vpx(16)
             font.family: bodyFont.name
-            color: theme.text
+            color: theme.textgreylight
             elide: Text.ElideRight
             wrapMode: Text.WordWrap
         }

@@ -41,7 +41,7 @@ id: root
         id: logobg
 
             anchors.fill: platformlogo
-            source: "../assets/images/gradient.png"
+            source: "../assets/images/gradient_white.png"
             asynchronous: true
             visible: false
         }
@@ -56,7 +56,7 @@ id: root
             }
             fillMode: Image.PreserveAspectFit
             source: "../assets/images/logospng/" + Utils.processPlatformName(currentCollection.shortName) + ".png"
-            sourceSize: Qt.size(parent.width, parent.height)
+            sourceSize { width: 256; height: 256 }
             smooth: true
             visible: false
             asynchronous: true           
@@ -141,7 +141,6 @@ id: root
                     }
                     source: "../assets/images/searchicon.svg"
                     opacity: searchbar.selected && !searchActive ? 1 : searchActive ? 0.8 : 0.5
-                    asynchronous: true
                 }
 
                 TextInput {
