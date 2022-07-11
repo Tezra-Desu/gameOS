@@ -28,9 +28,9 @@ import "Settings"
 FocusScope {
 id: root
 
-    FontLoader { id: titleFont; source: "assets/fonts/SourceSansPro-Bold.ttf" }
-    FontLoader { id: subtitleFont; source: "assets/fonts/OpenSans-Bold.ttf" }
-    FontLoader { id: bodyFont; source: "assets/fonts/OpenSans-Semibold.ttf" }
+    FontLoader { id: titleFont; source: "assets/fonts/Inter-Bold-slnt=0.ttf" }
+    FontLoader { id: subtitleFont; source: "assets/fonts/Inter-Medium-slnt=0.ttf" }
+    FontLoader { id: bodyFont; source: "assets/fonts/Inter-Light-slnt=0.ttf" }
 
     // Load settings
     property var settings: {
@@ -88,7 +88,7 @@ id: root
 
     // Filtering options
     property bool showFavs: false
-    property var sortByFilter: ["sort_title", "lastPlayed", "playCount", "rating"]
+    property var sortByFilter: ["title", "lastPlayed", "playTime"]
     property int sortByIndex: 0
     property var orderBy: Qt.AscendingOrder
     property string searchTerm: ""
@@ -124,13 +124,13 @@ id: root
     // Launch the current game
     function launchGame(game) {
         if (game !== null) {
-            //if (game.collections.get(0).name === "Steam")
+            if (game.collections.get(0).name === "Steam")
                 launchGameScreen();
 
             saveCurrentState(game);
             game.launch();
         } else {
-            //if (currentGame.collections.get(0).name === "Steam")
+            if (currentGame.collections.get(0).name === "Steam")
                 launchGameScreen();
 
             saveCurrentState(currentGame);
@@ -186,14 +186,19 @@ id: root
     // Theme settings
     property var theme: {
         return {
-            main:           "#1d253d",
-            secondary:      "#202a44",
-            accent:         "#f00980",
-            highlight:      "#f00980",
-            text:           "#ececec",
-            button:         "#f00980",
-            gradientstart:  "#000d111d",
-            gradientend:    "#FF0d111d"
+            main:           "#12151a",
+            secondary:      "#12151a",
+            accent:         "#eba020",
+            highlight:      "#eba020",
+            text:           "#ffffff",
+            textgreylight:  "#dbdbdb",
+            textgrey:       "#6f6f6f",
+            textblack:      "#1b2929",            
+            button:         "#eba020",
+            gradientstart:  "#0012151a",
+            gradientend:    "#FF12151a",
+            gradientaccentstart:  "#f7941d",
+            gradientaccentend:    "#fbb748"
         }
     }
 
@@ -305,123 +310,72 @@ id: root
         color: theme.main
     }
 
-    Loader  {
+    ShowcaseViewMenu {
     id: showcaseLoader
 
         focus: (root.state === "showcasescreen")
-        active: opacity !== 0
+        visible: opacity !== 0
         opacity: focus ? 1 : 0
         Behavior on opacity { PropertyAnimation { duration: transitionTime } }
 
         anchors.fill: parent
-        sourceComponent: showcaseview
-        asynchronous: true
     }
 
-    Loader  {
+    GridViewMenu {
     id: gridviewloader
 
         focus: (root.state === "softwaregridscreen")
-        active: opacity !== 0
+        visible: opacity !== 0
         opacity: focus ? 1 : 0
         Behavior on opacity { PropertyAnimation { duration: transitionTime } }
 
         anchors.fill: parent
-        sourceComponent: gridview
-        asynchronous: true
     }
 
-    Loader  {
+    SoftwareListMenu {
     id: listviewloader
 
         focus: (root.state === "softwarescreen")
-        active: opacity !== 0
+        visible: opacity !== 0
         opacity: focus ? 1 : 0
         Behavior on opacity { PropertyAnimation { duration: transitionTime } }
 
         anchors.fill: parent
-        sourceComponent: listview
-        asynchronous: true
     }
 
-    Loader  {
+    GameView {
     id: gameviewloader
 
         focus: (root.state === "gameviewscreen")
-        active: opacity !== 0
-        onActiveChanged: if (!active) popLastGame();
+        visible: opacity !== 0
+        onVisibleChanged: if (!active) popLastGame();
         opacity: focus ? 1 : 0
         Behavior on opacity { PropertyAnimation { duration: transitionTime } }
 
         anchors.fill: parent
-        sourceComponent: gameview
-        asynchronous: true
-        //game: currentGame
+        game: currentGame
     }
 
-    Loader  {
+    LaunchGame {
     id: launchgameloader
 
         focus: (root.state === "launchgamescreen")
-        active: opacity !== 0
+        visible: opacity !== 0
         opacity: focus ? 1 : 0
         Behavior on opacity { PropertyAnimation { duration: transitionTime } }
 
         anchors.fill: parent
-        sourceComponent: launchgameview
-        asynchronous: true
     }
 
-    Loader  {
+    SettingsScreen {
     id: settingsloader
 
         focus: (root.state === "settingsscreen")
-        active: opacity !== 0
+        visible: opacity !== 0
         opacity: focus ? 1 : 0
         Behavior on opacity { PropertyAnimation { duration: transitionTime } }
 
         anchors.fill: parent
-        sourceComponent: settingsview
-        asynchronous: true
-    }
-
-    Component {
-    id: showcaseview
-
-        ShowcaseViewMenu { focus: true }
-    }
-
-    Component {
-    id: gridview
-
-        GridViewMenu { focus: true }
-    }
-
-    Component {
-    id: listview
-
-        SoftwareListMenu { focus: true }
-    }
-
-    Component {
-    id: gameview
-
-        GameView {
-            focus: true
-            game: currentGame
-        }
-    }
-
-    Component {
-    id: launchgameview
-
-        LaunchGame { focus: true }
-    }
-
-    Component {
-    id: settingsview
-
-        SettingsScreen { focus: true }
     }
 
     
