@@ -96,7 +96,6 @@ id: root
             smooth: true
             fillMode: Image.PreserveAspectFit
             visible: !isVideo
-            asynchronous: true
         }
         Keys.onLeftPressed: { sfxNav.play(); decrementCurrentIndex() }
         Keys.onRightPressed: { sfxNav.play(); incrementCurrentIndex() }

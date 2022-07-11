@@ -35,6 +35,11 @@ id: root
         width: (buttonlabel.text !== "") ? buttonlabel.x + buttonlabel.contentWidth + buttonMargin : height
         Behavior on width { NumberAnimation { duration: 100 } }
         height: vpx(50)
+        //added button gradient
+        gradient: Gradient {
+            GradientStop { position: 0.0; color: selected ? theme.gradientaccentstart : theme.gradientend }
+            GradientStop { position: 0.9; color: selected ? theme.gradientaccentend : theme.gradientstart }
+        }
         color: selected ? theme.accent : "transparent"
         radius: height/2
         border.width: selected ? 0 : 2
@@ -65,7 +70,7 @@ id: root
 
             font.family: subtitleFont.name
             font.pixelSize: vpx(16)
-            font.bold: true
+            font.bold: false
             color: theme.text
             //opacity: selected ? 1 : 0.2
             visible: text !== ""
