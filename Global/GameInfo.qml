@@ -207,50 +207,7 @@ id: infocontainer
             visible: (gameData.playTime > 0)
         }
     }
-    // Meta data
-    Item {
-    id: metarow2
-
-        height: vpx(130)
-        anchors {
-            top: gametitle.bottom; topMargin: vpx(25)
-            left: parent.left
-            right: parent.right
-        }
-        // Tags box
-        Text {
-        id: tagtitle
-
-            width: contentWidth
-            height: parent.height
-            anchors { left: parent.left; }
-            verticalAlignment: Text.AlignVCenter
-            text: "Tags: "
-            font.pixelSize: vpx(16)
-            font.family: subtitleFont.name
-            font.bold: true
-            color: theme.accent
-        }
-
-        Text {
-        id: tagtext
-
-        anchors {
-            left: tagtitle.right; leftMargin: vpx(5)
-            top: metarow.bottom
-            bottom: parent.bottom;
-        }    
-            height: parent.height
-            width: parent.width
-            verticalAlignment: Text.AlignVCenter
-            text: gameData ? gameData.genre : ""
-            font.pixelSize: vpx(16)
-            font.family: subtitleFont.name
-            elide: Text.ElideRight
-            color: theme.text
-            wrapMode: Text.WordWrap
-        }
-     }
+ 
     // Description
     PegasusUtils.AutoScroll
     {
@@ -259,7 +216,7 @@ id: infocontainer
         anchors {
             left: parent.left; 
             right: parent.right;
-            top: metarow2.bottom
+            top: metarow.bottom
             bottom: parent.bottom;
         }
 
