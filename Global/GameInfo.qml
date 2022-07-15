@@ -211,7 +211,7 @@ id: infocontainer
     Item {
     id: metarow2
 
-        height: vpx(100)
+        height: vpx(130)
         anchors {
             top: gametitle.bottom; topMargin: vpx(25)
             left: parent.left
