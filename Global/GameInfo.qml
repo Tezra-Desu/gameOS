@@ -38,7 +38,7 @@ id: infocontainer
         
         color: theme.text
         font.family: titleFont.name
-        font.pixelSize: vpx(44)
+        font.pixelSize: vpx(28)
         font.bold: true
         horizontalAlignment: Text.AlignHLeft
         verticalAlignment: Text.AlignVCenter
